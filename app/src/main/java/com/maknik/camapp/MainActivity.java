@@ -162,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                 //  Uri uri = Uri.fromFile(new File(currentPhotoPath));
-                    Uri uri = Uri.fromFile(saveBitmapToFile(new File(currentPhotoPath)));
+               Uri uri = Uri.fromFile(new File(currentPhotoPath));
+            //      Uri uri = Uri.fromFile(saveBitmapToFile(new File(currentPhotoPath)));
                // Uri uri = Uri.parse(currentPhotoPath);
                 if (SDK_INT < 29) {
                     try {
@@ -215,11 +215,11 @@ public class MainActivity extends AppCompatActivity {
                     //isSuccess = false;
                     throw new IOException("Failed to open output stream.");
                 }
-
-                if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)) {
+               saveBitmapToFile( new File(currentPhotoPath),stream);
+               /* if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)) {
                     //isSuccess = false;
                     throw new IOException("Failed to save bitmap.");
-                }
+                }*/
             }
             //isSuccess = true;
             return uri;
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public File saveBitmapToFile(File file){
+    public File saveBitmapToFile(File file, OutputStream stream){
         try {
 
             // BitmapFactory options to downsize the image
@@ -266,13 +266,14 @@ public class MainActivity extends AppCompatActivity {
 
             // here i override the original image file
             file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(file);
+          //  FileOutputStream outputStream = new FileOutputStream(file);
             Bitmap bmap = rotateImage(selectedBitmap,rotate);
-            bmap.compress(Bitmap.CompressFormat.JPEG, qualityValue , outputStream);
+            bmap.compress(Bitmap.CompressFormat.JPEG, qualityValue , stream);
 
-            Log.d("SERSER","path: "+file.getAbsolutePath() );
+
             return file;
         } catch (Exception e) {
+            Log.d("MainActivity","Exception: "+e.getMessage());
             return null;
         }
     }
